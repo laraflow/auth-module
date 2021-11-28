@@ -1,0 +1,57 @@
+{
+    "name": "hafijul233/auth-module",
+    "type" : "laravel-module",
+    "description": "",
+    "support": {
+        "issues": "https://github.com/hafijul233/auth-module/issues",
+        "wiki": "https://github.com/hafijul233/auth-module/wiki",
+        "source": "https://github.com/hafijul233/auth-module",
+        "docs": "http://hafijulislam.me/projects/auth-module"
+    },
+    "keywords": [
+        "framework",
+        "laravel",
+        "boilerplate",
+        "modules",
+        "auth"
+    ],
+    "license" : "MIT",
+    "authors": [
+        {
+            "name": "Hafijul Islam",
+            "email": "hafijul233@gmail.com",
+            "homepage": "http://www.hafijulislam.me",
+            "role": "Maintainer"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist"
+    },
+    "prefer-stable": true,
+    "require": {
+        "nwidart/laravel-modules": "^8.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Auth\\Providers\\AuthServiceProvider"
+            ],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Auth\\": ""
+        },
+        "exclude-from-classmap": [
+            "**/Tests/*",
+            "**/test/*",
+            "**/tests/*"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Auth\\Tests\\": "Tests/"
+        }
+    }
+}
