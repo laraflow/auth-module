@@ -9,9 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
-use Modules\Admin\Http\Requests\Auth\LoginRequest;
+use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Core\Supports\Constant;
-use Modules\Core\Supports\DefaultValue;
 
 /**
  * Class AuthenticatedSessionService
@@ -193,7 +192,12 @@ class AuthenticatedSessionService
         return $credentials;
     }
 
-    public static function isSuperAdmin() {
-        return (\auth()->user()->hasRole(Constant::SUPER_ADMIN_ROLE));
+    /**
+     * Verify is current user is super admin
+     * @return bool
+     */
+    public static function isSuperAdmin(): bool
+    {
+        return (auth()->user()->hasRole(Constant::SUPER_ADMIN_ROLE));
     }
 }

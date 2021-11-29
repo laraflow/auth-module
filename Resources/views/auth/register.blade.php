@@ -1,4 +1,4 @@
-@extends('auth::Admin.Resources.views.layouts.auth')
+@extends('core::layouts.guest')
 
 @section('title', 'Register')
 

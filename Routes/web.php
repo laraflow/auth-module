@@ -80,4 +80,4 @@ Route::prefix(config('auth.admin_auth_prefix'))
             ->name('logout');
     });
 
-Route::view('/privacy-terms', 'admin::terms')->name('admin.terms');
+Route::view('/privacy-terms', 'auth::terms')->name('auth.terms');

@@ -7,8 +7,9 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Modules\Admin\Http\Requests\Auth\RegisterRequest;
-use Modules\Admin\Services\Auth\RegisteredUserService;
+use Modules\Auth\Http\Requests\RegisterRequest;
+use Modules\Auth\Services\RegisteredUserService;
+
 
 class RegisteredUserController extends Controller
 {

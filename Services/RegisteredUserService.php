@@ -3,13 +3,11 @@
 namespace Modules\Auth\Services;
 
 use Exception;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use Modules\Admin\Models\User;
-use Modules\Admin\Repositories\Eloquent\Rbac\UserRepository;
-use Modules\Admin\Services\Common\FileUploadService;
+use Modules\Core\Models\User;
+use Modules\Core\Repositories\Eloquent\UserRepository;
+use Modules\Core\Services\FileUploadService;
 use Modules\Core\Supports\Constant;
-use Modules\Core\Supports\DefaultValue;
 use Modules\Core\Supports\Utility;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
