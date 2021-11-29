@@ -15,8 +15,7 @@
 @endpush
 
 @push('plugin-style')
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="{{ asset('modules/admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+
 @endpush
 
 @push('inline-style')
