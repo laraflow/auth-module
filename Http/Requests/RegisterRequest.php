@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Admin\Http\Requests\Auth;
+namespace Modules\Auth\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Admin\Rules\PhoneNumber;

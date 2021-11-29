@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Admin\Listeners\Auth;
+namespace Modules\Auth\Listeners;
 
-use Modules\Admin\Events\Auth\UserRegisteredEvent;
+use Modules\Auth\Events\UserRegisteredEvent;
 
 /**
  * @class UserRegisteredEventListener

@@ -4,7 +4,6 @@ namespace Modules\Auth\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 
 class AuthServiceProvider extends ServiceProvider
 {

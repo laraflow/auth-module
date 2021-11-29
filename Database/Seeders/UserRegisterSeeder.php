@@ -1,16 +1,17 @@
 <?php
 
-namespace Modules\Admin\Database\Seeders;
+namespace Modules\Auth\Database\Seeders;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
-use Modules\Admin\Models\Rbac\Role;
-use Modules\Admin\Models\User;
-use Modules\Admin\Repositories\Eloquent\Rbac\UserRepository;
-use Modules\Admin\Services\Common\FileUploadService;
-use Modules\Admin\Supports\DefaultValue;
-use Modules\Admin\Supports\Utility;
+use Modules\Core\Models\User;
+use Modules\Core\Repositories\Eloquent\UserRepository;
+use Modules\Core\Services\Common\FileUploadService;
+use Modules\Core\Supports\Constant;
+use Modules\Core\Supports\Utility;
+use Modules\Rbac\Models\Role;
+use Psy\Command\Command;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 use Throwable;
@@ -59,10 +60,10 @@ class UserRegisterSeeder extends Seeder
                 'name' => 'Mohammad Hafijul Islam',
                 'username' => 'hafijul233',
                 'email' => 'hafijul233@gmail.com',
-                'password' => Utility::hashPassword(('123456789' ?? DefaultValue::PASSWORD)),
+                'password' => Utility::hashPassword(('123456789' ?? Constant::PASSWORD)),
                 'mobile' => '01710534092',
                 'remarks' => 'Database Seeder',
-                'enabled' => DefaultValue::ENABLED_OPTION
+                'enabled' => Constant::ENABLED_OPTION
             ];
 
             $newUser = $this->userRepository->create($newUser);
@@ -113,7 +114,7 @@ class UserRegisterSeeder extends Seeder
     protected function attachUserRoles(User $user): bool
     {
 
-        $adminRole = Role::findByName(DefaultValue::SUPER_ADMIN_ROLE);
+        $adminRole = Role::findByName(Constant::SUPER_ADMIN_ROLE);
         $this->userRepository->setModel($user);
         return $this->userRepository->manageRoles([$adminRole->id]);
     }

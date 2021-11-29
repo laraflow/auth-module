@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Admin\Events\Auth;
+namespace Modules\Auth\Events;
 
 use Illuminate\Queue\SerializesModels;
-use Modules\Admin\Models\User;
+use Modules\Core\Models\User;
 
 class UserRegisteredEvent
 {
