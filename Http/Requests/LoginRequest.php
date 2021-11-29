@@ -7,7 +7,7 @@ use Modules\Admin\Rules\MaxLength;
 use Modules\Admin\Rules\MinLength;
 use Modules\Admin\Rules\PhoneNumber;
 use Modules\Admin\Rules\Username;
-use Modules\Admin\Supports\Constant;
+use Modules\Core\Supports\Constant;
 
 class LoginRequest extends FormRequest
 {

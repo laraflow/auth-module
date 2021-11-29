@@ -5,7 +5,7 @@ namespace Modules\Auth\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Admin\Rules\PhoneNumber;
 use Modules\Admin\Rules\Username;
-use Modules\Admin\Supports\Constant;
+use Modules\Core\Supports\Constant;
 
 class RegisterRequest extends FormRequest
 {

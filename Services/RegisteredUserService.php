@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Admin\Models\User;
 use Modules\Admin\Repositories\Eloquent\Rbac\UserRepository;
 use Modules\Admin\Services\Common\FileUploadService;
-use Modules\Admin\Supports\Constant;
-use Modules\Admin\Supports\DefaultValue;
-use Modules\Admin\Supports\Utility;
+use Modules\Core\Supports\Constant;
+use Modules\Core\Supports\DefaultValue;
+use Modules\Core\Supports\Utility;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
@@ -81,12 +81,12 @@ class RegisteredUserService
         //Hash password
         return [
             'name' => $request['name'],
-            'password' => Utility::hashPassword(($request['password'] ?? DefaultValue::PASSWORD)),
+            'password' => Utility::hashPassword(($request['password'] ?? Constant::PASSWORD)),
             'username' => ($request['username'] ?? Utility::generateUsername($request['name'])),
             'mobile' => ($request['mobile'] ?? null),
             'email' => ($request['email'] ?? null),
             'remarks' => 'self-registered',
-            'enabled' => DefaultValue::ENABLED_OPTION
+            'enabled' => Constant::ENABLED_OPTION
         ];
     }
 
@@ -113,6 +113,6 @@ class RegisteredUserService
     protected function attachDefaultRoles(User $user): bool
     {
         $this->userRepository->setModel($user);
-        return $this->userRepository->manageRoles([DefaultValue::GUEST_ROLE_ID]);
+        return $this->userRepository->manageRoles([Constant::GUEST_ROLE_ID]);
     }
 }

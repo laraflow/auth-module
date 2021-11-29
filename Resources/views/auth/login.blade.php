@@ -40,29 +40,29 @@
                 <p class="login-box-msg">Sign in to start your session</p>
                 {!! \Form::open(['route' => 'auth.login', 'id' => 'login-form', 'method' => 'post']) !!}
 
-                @if(config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_EMAIL
-                || (config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_OTP
-                    && config('auth.credential_otp_field') == \Modules\Admin\Supports\Constant::OTP_EMAIL))
+                @if(config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_EMAIL
+                || (config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_OTP
+                    && config('auth.credential_otp_field') == \Modules\Core\Supports\Constant::OTP_EMAIL))
                     {!! \Form::iEmail('email', __('Email'), null, true, "fas fa-envelope", "after",
                                         [ 'minlength' => '5', 'maxlength' => '250',
                                             'size' => '250', 'placeholder' => 'Enter Email Address']) !!}
                 @endif
 
-                @if(config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_MOBILE
-                || (config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_OTP
-                    && config('auth.credential_otp_field') == \Modules\Admin\Supports\Constant::OTP_MOBILE))
+                @if(config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_MOBILE
+                || (config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_OTP
+                    && config('auth.credential_otp_field') == \Modules\Core\Supports\Constant::OTP_MOBILE))
                     {!! \Form::iTel('mobile', __('Mobile'), null, true, "fas fa-mobile", "after",
                                         [ 'minlength' => '11', 'maxlength' => '11',
                                             'size' => '11', 'placeholder' => 'Enter Mobile Number']) !!}
                 @endif
 
-                @if(config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_USERNAME)
+                @if(config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_USERNAME)
                     {!! \Form::iText('username', __('Username'), null, true, "fas fa-user-shield", "after",
                                         [ 'minlength' => '5', 'maxlength' => '250',
                                             'size' => '250', 'placeholder' => 'Enter Username']) !!}
                 @endif
 
-                @if(config('auth.credential_field') != \Modules\Admin\Supports\Constant::LOGIN_OTP)
+                @if(config('auth.credential_field') != \Modules\Core\Supports\Constant::LOGIN_OTP)
                     {!! \Form::iPassword('password', __('Password'), true, "fas fa-lock", "after",
                                         ["placeholder" => 'Enter Password', 'autocomplete' => "current-password",
                                          'minlength' => '5', 'maxlength' => '250', 'size' => '250']) !!}
@@ -127,9 +127,9 @@
         $(function () {
             $("#login-form").validate({
                 rules: {
-                    @if(config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_EMAIL
-                    || (config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_OTP
-                    && config('auth.credential_otp_field') == \Modules\Admin\Supports\Constant::OTP_EMAIL))
+                    @if(config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_EMAIL
+                    || (config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_OTP
+                    && config('auth.credential_otp_field') == \Modules\Core\Supports\Constant::OTP_EMAIL))
                     email: {
                         required: true,
                         minlength: 3,
@@ -138,9 +138,9 @@
                     },
                     @endif
 
-                        @if(config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_MOBILE
-                        || (config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_OTP
-                        && config('auth.credential_otp_field') == \Modules\Admin\Supports\Constant::OTP_MOBILE))
+                        @if(config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_MOBILE
+                        || (config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_OTP
+                        && config('auth.credential_otp_field') == \Modules\Core\Supports\Constant::OTP_MOBILE))
                     mobile: {
                         required: true,
                         minlength: 11,
@@ -149,7 +149,7 @@
                     },
                     @endif
 
-                        @if(config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_USERNAME)
+                        @if(config('auth.credential_field') == \Modules\Core\Supports\Constant::LOGIN_USERNAME)
                     username: {
                         required: true,
                         minlength: 5,
@@ -157,7 +157,7 @@
                     },
                     @endif
 
-                        @if(config('auth.credential_field') != \Modules\Admin\Supports\Constant::LOGIN_OTP)
+                        @if(config('auth.credential_field') != \Modules\Core\Supports\Constant::LOGIN_OTP)
                     password: {
                         required: true,
                         minlength: {{ config('auth.minimum_password_length') }},
