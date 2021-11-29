@@ -3,10 +3,8 @@
 namespace Modules\Auth\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Admin\Rules\MaxLength;
-use Modules\Admin\Rules\MinLength;
-use Modules\Admin\Rules\PhoneNumber;
-use Modules\Admin\Rules\Username;
+use Modules\Core\Rules\PhoneNumber;
+use Modules\Core\Rules\Username;
 use Modules\Core\Supports\Constant;
 
 class LoginRequest extends FormRequest

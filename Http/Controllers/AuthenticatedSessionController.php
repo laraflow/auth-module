@@ -3,12 +3,12 @@
 namespace Modules\Auth\Http\Controllers;;
 
 use App\Http\Controllers\Controller;
-use Modules\Admin\Http\Requests\Auth\LoginRequest;
-use Modules\Admin\Services\Auth\AuthenticatedSessionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Modules\Auth\Http\Requests\LoginRequest;
+use Modules\Auth\Services\AuthenticatedSessionService;
 
 /**
  * @class AuthenticatedSessionController
@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('admin::auth.login');
+        return view('auth::auth.login');
     }
 
     /**

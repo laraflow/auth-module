@@ -1,4 +1,4 @@
-@extends('auth::Admin.Resources.views.layouts.auth')
+@extends('core::layouts.guest')
 
 @section('title', 'Login')
 
@@ -6,23 +6,8 @@
 
 @endpush
 
-@push('webfont')
 
-@endpush
-
-@push('icon')
-
-@endpush
-
-@push('plugin-style')
-
-@endpush
-
-@push('inline-style')
-
-@endpush
-
-@push('head-script')
+@push('page-style')
 
 @endpush
 
@@ -118,6 +103,7 @@
 
 
 @push('plugin-script')
+    <!-- jquery validation -->
     <script src="{{ asset('modules/admin/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
 @endpush
 
