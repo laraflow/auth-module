@@ -1,4 +1,4 @@
-@extends('admin::Admin.Resources.views.layouts.auth')
+@extends('auth::Admin.Resources.views.layouts.auth')
 
 @section('title', 'Login')
 
@@ -38,7 +38,7 @@
         <div class="card">
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
-                {!! \Form::open(['route' => 'admin.login', 'id' => 'login-form', 'method' => 'post']) !!}
+                {!! \Form::open(['route' => 'auth.login', 'id' => 'login-form', 'method' => 'post']) !!}
 
                 @if(config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_EMAIL
                 || (config('auth.credential_field') == \Modules\Admin\Supports\Constant::LOGIN_OTP
@@ -99,15 +99,15 @@
                 --}}
             <!-- /.social-auth-links -->
 
-                @if (Route::has('admin.password.request') && config('auth.allow_password_reset'))
+                @if (Route::has('auth.password.request') && config('auth.allow_password_reset'))
                     <p class="mb-1">
-                        <a href="{{ route('admin.password.request') }}">I forgot my password</a>
+                        <a href="{{ route('auth.password.request') }}">I forgot my password</a>
                     </p>
                 @endif
 
-                @if(Route::has('admin.register') && config('auth.allow_register'))
+                @if(Route::has('auth.register') && config('auth.allow_register'))
                     <p class="mb-0">
-                        <a href="{{ route('admin.register') }}" class="text-center">Register a new membership</a>
+                        <a href="{{ route('auth.register') }}" class="text-center">Register a new membership</a>
                     </p>
                 @endif
             </div>

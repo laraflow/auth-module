@@ -1,4 +1,4 @@
-@extends('admin::Admin.Resources.views.layouts.auth')
+@extends('auth::Admin.Resources.views.layouts.auth')
 
 @section('title', 'Register')
 
@@ -38,7 +38,7 @@
         <div class="card">
             <div class="card-body register-card-body">
                 <p class="login-box-msg">Register a new membership</p>
-                {!! \Form::open(['route' => 'admin.register', 'id' => 'register-form', 'method' => 'post']) !!}
+                {!! \Form::open(['route' => 'auth.register', 'id' => 'register-form', 'method' => 'post']) !!}
 
                 {!! \Form::iText('name', __('Name'), null, true, "fas fa-font", "after",
                 [ 'minlength' => '2', 'maxlength' => '255',
@@ -81,7 +81,7 @@
                         <div class="icheck-primary">
                             {!! \Form::checkbox('agree_terms', 'agree', null, ['id' => 'agree_terms']) !!}
                             <label for="agree_terms">
-                                I agree to the <a href="{{ route('admin.terms') }}" target="_blank">terms</a>
+                                I agree to the <a href="{{ route('auth.terms') }}" target="_blank">terms</a>
                             </label>
                         </div>
                     </div>
@@ -106,15 +106,15 @@
                 --}}
             <!-- /.social-auth-links -->
 
-                @if(Route::has('admin.login'))
+                @if(Route::has('auth.login'))
                     <p class="mb-0">
-                        <a href="{{ route('admin.login') }}" class="text-center">I already have a membership</a>
+                        <a href="{{ route('auth.login') }}" class="text-center">I already have a membership</a>
                     </p>
                 @endif
 
-                @if (Route::has('admin.password.request') && config('auth.allow_password_reset'))
+                @if (Route::has('auth.password.request') && config('auth.allow_password_reset'))
                     <p class="mb-1">
-                        <a href="{{ route('admin.password.request') }}">I forgot my password</a>
+                        <a href="{{ route('auth.password.request') }}">I forgot my password</a>
                     </p>
                 @endif
             </div>

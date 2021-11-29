@@ -1,4 +1,4 @@
-@extends('admin::Admin.Resources.views.layouts.auth')
+@extends('auth::Admin.Resources.views.layouts.auth')
 
 @section('title', 'Confirm Password')
 
