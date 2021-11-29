@@ -15,7 +15,7 @@ use Modules\Admin\Supports\DefaultValue;
 
 /**
  * Class AuthenticatedSessionService
- * @package Modules\Admin\Services\Auth
+ * @package Modules\Auth\Services
  */
 class AuthenticatedSessionService
 {

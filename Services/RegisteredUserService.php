@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Admin\Services\Auth;
+namespace Modules\Auth\Services;
 
 use Exception;
 use Illuminate\Auth\Events\Registered;
