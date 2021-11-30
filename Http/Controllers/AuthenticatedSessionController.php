@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Auth\Services\AuthenticatedSessionService;
+use Modules\Core\Models\User;
 
 /**
  * @class AuthenticatedSessionController
@@ -75,4 +76,5 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
 }

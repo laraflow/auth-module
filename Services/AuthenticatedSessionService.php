@@ -18,6 +18,8 @@ use Modules\Core\Supports\Constant;
  */
 class AuthenticatedSessionService
 {
+    public $request = null;
+
     /**
      * Handle an incoming auth request.
      *
@@ -26,15 +28,26 @@ class AuthenticatedSessionService
      */
     public function attemptLogin(LoginRequest $request): array
     {
-        $authConfirmation = $this->authenticate($request);
+        $this->request = $request;
+
+        $authConfirmation = $this->ensureIsNotRateLimited($request);
 
         if ($authConfirmation['status'] == true) {
-            $request->session()->regenerate();
+            //Count Overflow Request hit
+            RateLimiter::hit($this->throttleKey($request));
+
+            $authConfirmation = $this->authenticate($request);
+
+            if ($authConfirmation['status'] == true) {
+                //Reset Rate Limiter
+                RateLimiter::clear($this->throttleKey($request));
+                //start Auth session
+                $request->session()->regenerate();
+            }
         }
 
         return $authConfirmation;
     }
-
 
     /**
      * Attempt to authenticate the request's credentials.
@@ -45,10 +58,15 @@ class AuthenticatedSessionService
      */
     private function authenticate(LoginRequest $request): array
     {
-        $this->ensureIsNotRateLimited($request);
-
+        //Format config based request value
         $authInfo = $this->formatAuthCredential($request);
+
         $remember_me = false;
+
+        $confirmation = ['status' => false,
+            'message' => __('auth.login.failed'),
+            'level' => Constant::MSG_TOASTR_ERROR,
+            'title' => 'Alert!'];
 
         if (config('auth.allow_remembering')) {
             $remember_me = $request->boolean('remember');
@@ -56,45 +74,93 @@ class AuthenticatedSessionService
 
         //authentication is OTP
         if (!isset($authInfo['password'])) {
-            //TODO OTP Based Authentication
-            return ['status' => false, 'message' => __('auth.failed'), 'level' => Constant::MSG_TOASTR_ERROR, 'title' => 'Alert!'];
-        } else {
-            //Login using [email, mobile, username] & password
-            if (Auth::attempt($authInfo, $remember_me)) {
-
-                //TODO Email Verification
-                //dd((Auth::user() instanceof MustVerifyEmail));
-
-                RateLimiter::clear($this->throttleKey($request));
-                return ['status' => true, 'message' => __('auth.success'), 'level' => Constant::MSG_TOASTR_SUCCESS, 'title' => 'Authentication'];
-            }
-
-            RateLimiter::hit($this->throttleKey($request));
-            return ['status' => false, 'message' => __('auth.failed'), 'level' => Constant::MSG_TOASTR_ERROR, 'title' => 'Alert!'];
+            $confirmation = $this->otpBasedLogin($authInfo, $remember_me);
+        } //Normal Login
+        else {
+            $confirmation = $this->credentialBasedLogin($authInfo, $remember_me);
         }
+
+        if ($confirmation['status'] == true) {
+
+            //is user is banned to log in
+            if (!$this->isUserEnabled()) {
+                //logout from all guard
+                Auth::logout();
+                $confirmation = ['status' => false,
+                    'message' => __('auth.login.banned'),
+                    'level' => Constant::MSG_TOASTR_WARNING,
+                    'title' => 'Alert!'];
+
+            } else if ($this->hasForcePasswordReset()) {
+                //redirect if password need to reset
+                $confirmation = ['status' => true,
+                    'message' => __('auth.login.forced'),
+                    'level' => Constant::MSG_TOASTR_WARNING,
+                    'title' => 'Notification!',
+                    'redirect_to' => route('auth.password.reset')];
+
+            } else {
+                //set the auth user redirect page
+                $confirmation['redirect_to'] = (Auth::user()->home_page ?? Constant::DASHBOARD_ROUTE);
+            }
+        }
+
+        return $confirmation;
+    }
+
+    /**
+     * @param array $credential
+     * @param bool $remember_me
+     * @return array
+     */
+    private function credentialBasedLogin(array $credential, bool $remember_me = false): array
+    {
+        $confirmation = ['status' => false, 'message' => __('auth.login.failed'), 'level' => Constant::MSG_TOASTR_ERROR, 'title' => 'Alert!'];
+
+        if (Auth::attempt($credential, $remember_me)) {
+            $confirmation = ['status' => true, 'message' => __('auth.login.success'), 'level' => Constant::MSG_TOASTR_SUCCESS, 'title' => 'Notification'];
+        }
+
+        return $confirmation;
+    }
+
+    /**
+     * @param array $credential
+     * @param bool $remember_me
+     * @return array
+     */
+    private function otpBasedLogin(array $credential, bool $remember_me = false): array
+    {
+        $confirmation = ['status' => false, 'message' => __('auth.login.failed'), 'level' => Constant::MSG_TOASTR_ERROR, 'title' => 'Alert!'];
+
+        if (Auth::attempt($credential, $remember_me)) {
+            $confirmation = ['status' => true, 'message' => __('auth.login.success'), 'level' => Constant::MSG_TOASTR_SUCCESS, 'title' => 'Notification'];
+        }
+
+        return $confirmation;
     }
 
     /**
      * Ensure the login request is not rate limited.
      *
      * @param LoginRequest $request
-     * @return void
+     * @return array
      *
      */
-    private function ensureIsNotRateLimited(LoginRequest $request)
+    private function ensureIsNotRateLimited(LoginRequest $request): array
     {
         if (!RateLimiter::tooManyAttempts($this->throttleKey($request), 5)) {
-            return;
+            return ['status' => true, 'message' => __('auth.throttle'), 'level' => Constant::MSG_TOASTR_WARNING, 'title' => 'Warning'];
         }
 
         event(new Lockout($request));
 
         $seconds = RateLimiter::availableIn($this->throttleKey($request));
 
-        notify(trans('auth.throttle', [
+        return ['status' => false, 'message' => __('auth.throttle', [
             'seconds' => $seconds,
             'minutes' => ceil($seconds / 60),
-        ]), Constant::MSG_TOASTR_WARNING, 'Warning');
+        ]), 'level' => Constant::MSG_TOASTR_WARNING, 'title' => 'Warning'];
     }
 
     /**
@@ -131,7 +197,7 @@ class AuthenticatedSessionService
      * @param Request $request
      * @return bool
      */
-    public function verifyUser(Request $request): bool
+    public function validate(Request $request): bool
     {
         if (config('auth.credential_field') != Constant::LOGIN_OTP) {
 
@@ -198,6 +264,25 @@ class AuthenticatedSessionService
      */
     public static function isSuperAdmin(): bool
     {
-        return (auth()->user()->hasRole(Constant::SUPER_ADMIN_ROLE));
+        return (Auth::user()->hasRole(Constant::SUPER_ADMIN_ROLE));
+    }
+
+    /**
+     * decided is if user status is disabled
+     * @return bool
+     */
+    public function isUserEnabled(): bool
+    {
+        return (Auth::user()->enabled == Constant::ENABLED_OPTION);
+    }
+
+    /**
+     * if user has to reset password forced
+     *
+     * @return bool
+     */
+    public function hasForcePasswordReset(): bool
+    {
+        return (bool)Auth::user()->force_pass_reset;
     }
 }
