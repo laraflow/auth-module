@@ -59,7 +59,7 @@ class UserRegisterSeeder extends Seeder
                 'name' => 'Mohammad Hafijul Islam',
                 'username' => 'hafijul233',
                 'email' => 'hafijul233@gmail.com',
-                'password' => Utility::hashPassword(('123456789' ?? Constant::PASSWORD)),
+                'password' => Utility::hashPassword(Constant::PASSWORD),
                 'mobile' => '01710534092',
                 'remarks' => 'Database Seeder',
                 'enabled' => Constant::ENABLED_OPTION
