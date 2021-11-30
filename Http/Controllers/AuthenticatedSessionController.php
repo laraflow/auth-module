@@ -1,6 +1,7 @@
 <?php
 
-namespace Modules\Auth\Http\Controllers;;
+namespace Modules\Auth\Http\Controllers;
+;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Auth\Services\AuthenticatedSessionService;
-use Modules\Core\Models\User;
 
 /**
  * @class AuthenticatedSessionController
@@ -48,12 +48,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        \Log::info("Log Info: " . json_encode($request->all()));
         $confirm = $this->authenticatedSessionService->attemptLogin($request);
-
+        \Log::info(json_encode($confirm));
         if ($confirm['status'] == true) {
             notify($confirm['message'], $confirm['level'], $confirm['title']);
-            return redirect()->route('admin.');
+            return redirect()->to($confirm['landing_page']);
         } else {
             notify($confirm['message'], $confirm['level'], $confirm['title']);
             return redirect()->back();

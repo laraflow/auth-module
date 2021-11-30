@@ -76,6 +76,7 @@ class AuthenticatedSessionService
         if (!isset($authInfo['password'])) {
             $confirmation = $this->otpBasedLogin($authInfo, $remember_me);
         } //Normal Login
+
         else {
             $confirmation = $this->credentialBasedLogin($authInfo, $remember_me);
         }
@@ -92,16 +93,19 @@ class AuthenticatedSessionService
                     'title' => 'Alert!'];
 
             } else if ($this->hasForcePasswordReset()) {
+
+                //limited to laravel package
+                Auth::logout();
                 //redirect if password need to reset
                 $confirmation = ['status' => true,
                     'message' => __('auth.login.forced'),
                     'level' => Constant::MSG_TOASTR_WARNING,
                     'title' => 'Notification!',
-                    'redirect_to' => route('auth.password.reset')];
+                    'landing_page' => route('auth.password.reset', ['token'], false)];
 
             } else {
                 //set the auth user redirect page
-                $confirmation['redirect_to'] = (Auth::user()->home_page ?? Constant::DASHBOARD_ROUTE);
+                $confirmation['landing_page'] = (Auth::user()->home_page ?? Constant::DASHBOARD_ROUTE);
             }
         }
 
