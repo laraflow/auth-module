@@ -49,7 +49,6 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $confirm = $this->authenticatedSessionService->attemptLogin($request);
-        \Log::info(json_encode($confirm));
         if ($confirm['status'] == true) {
             notify($confirm['message'], $confirm['level'], $confirm['title']);
             return redirect()->to($confirm['landing_page']);

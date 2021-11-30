@@ -21,6 +21,86 @@ class AuthenticatedSessionService
     public $request = null;
 
     /**
+     * Verify that current request user is who he claim to be
+     *
+     * @param Request $request
+     * @return bool
+     */
+    public function validate(Request $request): bool
+    {
+        if (config('auth.credential_field') != Constant::LOGIN_OTP) {
+
+            $credentials = [];
+
+            if (config('auth.credential_field') == Constant::LOGIN_EMAIL
+                || (config('auth.credential_field') == Constant::LOGIN_OTP
+                    && config('auth.credential_otp_field') == Constant::OTP_EMAIL)) {
+                $credentials['email'] = $request->user()->email;
+
+            } elseif (config('auth.credential_field') == Constant::LOGIN_MOBILE
+                || (config('auth.credential_field') == Constant::LOGIN_OTP
+                    && config('auth.credential_otp_field') == Constant::OTP_MOBILE)) {
+                $credentials['mobile'] = $request->user()->mobile;
+
+            } elseif (config('auth.credential_field') == Constant::LOGIN_USERNAME) {
+                $credentials['username'] = $request->user()->username;
+            }
+
+            //Password Field
+            $credentials['password'] = $request->password;
+
+            return Auth::guard('web')->validate($credentials);
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Verify is current user is super admin
+     * @return bool
+     */
+    public static function isSuperAdmin(): bool
+    {
+        return (Auth::user()->hasRole(Constant::SUPER_ADMIN_ROLE));
+    }
+
+    /**
+     * decided is if user status is disabled
+     * @return bool
+     */
+    public function isUserEnabled(): bool
+    {
+        return (Auth::user()->enabled == Constant::ENABLED_OPTION);
+    }
+
+    /**
+     * if user has to reset password forced
+     *
+     * @return bool
+     */
+    public function hasForcePasswordReset(): bool
+    {
+        return (bool)Auth::user()->force_pass_reset;
+    }
+
+    /**
+     * Destroy an authenticated session.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function attemptLogout(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+
+    /**
      * Handle an incoming auth request.
      *
      * @param LoginRequest $request
@@ -179,58 +259,6 @@ class AuthenticatedSessionService
     }
 
     /**
-     * Destroy an authenticated session.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function attemptLogout(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return redirect('/');
-    }
-
-    /**
-     * Verify that current request user is who he claim to be
-     *
-     * @param Request $request
-     * @return bool
-     */
-    public function validate(Request $request): bool
-    {
-        if (config('auth.credential_field') != Constant::LOGIN_OTP) {
-
-            $credentials = [];
-
-            if (config('auth.credential_field') == Constant::LOGIN_EMAIL
-                || (config('auth.credential_field') == Constant::LOGIN_OTP
-                    && config('auth.credential_otp_field') == Constant::OTP_EMAIL)) {
-                $credentials['email'] = $request->user()->email;
-
-            } elseif (config('auth.credential_field') == Constant::LOGIN_MOBILE
-                || (config('auth.credential_field') == Constant::LOGIN_OTP
-                    && config('auth.credential_otp_field') == Constant::OTP_MOBILE)) {
-                $credentials['mobile'] = $request->user()->mobile;
-
-            } elseif (config('auth.credential_field') == Constant::LOGIN_USERNAME) {
-                $credentials['username'] = $request->user()->username;
-            }
-
-            //Password Field
-            $credentials['password'] = $request->password;
-
-            return Auth::guard('web')->validate($credentials);
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Collect Credential Info from Request based on Config
      *
      * @param LoginRequest $request
@@ -260,33 +288,5 @@ class AuthenticatedSessionService
         }
 
         return $credentials;
-    }
-
-    /**
-     * Verify is current user is super admin
-     * @return bool
-     */
-    public static function isSuperAdmin(): bool
-    {
-        return (Auth::user()->hasRole(Constant::SUPER_ADMIN_ROLE));
-    }
-
-    /**
-     * decided is if user status is disabled
-     * @return bool
-     */
-    public function isUserEnabled(): bool
-    {
-        return (Auth::user()->enabled == Constant::ENABLED_OPTION);
-    }
-
-    /**
-     * if user has to reset password forced
-     *
-     * @return bool
-     */
-    public function hasForcePasswordReset(): bool
-    {
-        return (bool)Auth::user()->force_pass_reset;
     }
 }
