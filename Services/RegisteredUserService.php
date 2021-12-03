@@ -4,9 +4,9 @@ namespace Modules\Auth\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Modules\Core\Models\User;
-use Modules\Core\Repositories\Eloquent\UserRepository;
-use Modules\Core\Services\FileUploadService;
+use Modules\Core\Models\Setting\User;
+use Modules\Core\Repositories\Eloquent\Setting\UserRepository;
+use Modules\Core\Services\Common\FileUploadService;
 use Modules\Core\Supports\Constant;
 use Modules\Core\Supports\Utility;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
